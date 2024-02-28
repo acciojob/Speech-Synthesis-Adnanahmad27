@@ -25,7 +25,6 @@
       <textarea name="text">Hello! I love JavaScript 👍</textarea>
       <button id="stop">Stop!</button>
       <button id="speak">Speak</button>
-
     </div>
 
 <script>
@@ -37,6 +36,27 @@
   const stopButton = document.querySelector('#stop');
 
   //Your code goes here
+	speechSynthesis.addEventListener('voiceschanged', () => {
+	    voices = speechSynthesis.getVoices();
+	});
+	function populateVoices() {
+	    voicesDropdown.innerHTML = voices
+	        .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`)
+	        .join('');
+	}
+	speechSynthesis.addEventListener('voiceschanged', populateVoices);
+	function setVoice() {
+	    msg.voice = voices.find(voice => voice.name === this.value);
+	}
+
+	voicesDropdown.addEventListener('change', setVoice);
+	function setOption() {
+	    msg[this.name] = this.value;
+	}
+
+	options.forEach(option => option.addEventListener('change', setOption));
+	speakButton.addEventListener('click', () => speechSynthesis.speak(msg));
+ stopButton.addEventListener('click', () => speechSynthesis.cancel());
 </script>
 
 </body>
